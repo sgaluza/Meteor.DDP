@@ -20,5 +20,10 @@ namespace Meteor.DDP
             this.Data = data;
             this.Method = method;
         }
+
+        public override string ToString()
+        {
+            return String.Format("Collection: {0} Id: {1} Method: {2} Data: {3}", this.Collection, this.Id, this.Method, this.Data);
+        }
     }
 }

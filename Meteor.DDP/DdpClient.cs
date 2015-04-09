@@ -25,9 +25,9 @@ namespace Meteor.DDP
 
         public DdpClient(String url)
         {
-            this._socket = new ClientWebSocket();
             this._uri = new Uri(String.Format("ws://{0}/websocket", url));
-
+            this._socket = new ClientWebSocket();
+            this._socket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds(100);
         }
 
         public Task ConnectAsync()
@@ -35,7 +35,7 @@ namespace Meteor.DDP
             return this._socket.ConnectAsync(this._uri, CancellationToken.None)
                 .ContinueWith(s =>
                 {
-                    this.Send(new
+                    return this.Send(new
                     {
                         msg = "connect",
                         version = "1",
@@ -91,6 +91,13 @@ namespace Meteor.DDP
                 while (this._socket.State == WebSocketState.Open)
                 {
                     ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
+                    if(this._socket.State == WebSocketState.Aborted)
+                    {
+                        this._socket.Dispose();
+                        this._socket = new ClientWebSocket();
+                        ConnectAsync().Wait();
+                            
+                    }
                     WebSocketReceiveResult result = await this._socket.ReceiveAsync(segment, CancellationToken.None);
                     if (!result.EndOfMessage)
                     {
