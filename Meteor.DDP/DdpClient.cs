@@ -35,7 +35,7 @@ namespace Meteor.DDP
             return this._socket.ConnectAsync(this._uri, CancellationToken.None)
                 .ContinueWith(s =>
                 {
-                    return this.Send(new
+                    this.Send(new
                     {
                         msg = "connect",
                         version = "1",
@@ -49,9 +49,9 @@ namespace Meteor.DDP
 
         }
 
-        public Task Publish(String callId, String method, params dynamic[] args)
+        public void Publish(String callId, String method, params dynamic[] args)
         {
-            return this.Send(new
+            this.Send(new
             {
                 msg = "method",
                 method = method,
@@ -60,9 +60,9 @@ namespace Meteor.DDP
             });
         }
 
-        public Task Subscribe(String subId, String method, params dynamic[] args)
+        public void Subscribe(String subId, String method, params dynamic[] args)
         {
-            return this.Send(new
+            this.Send(new
                 {
                     msg = "sub",
                     name = method,
@@ -72,10 +72,10 @@ namespace Meteor.DDP
             );
         }
 
-        private Task Send(dynamic message)
+        private void Send(dynamic message)
         {
             ArraySegment<byte> segment = new ArraySegment<byte>(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
-            return this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None).Wait();
         }
 
         private async Task SubscriberLoop()
@@ -119,7 +119,7 @@ namespace Meteor.DDP
                             switch (msgType)
                             {
                                 case "ping":
-                                    await this.Send(new { msg = "pong" });
+                                    this.Send(new { msg = "pong" });
                                     break;
                                 case "error":
                                     if (this.MeteorError != null)
