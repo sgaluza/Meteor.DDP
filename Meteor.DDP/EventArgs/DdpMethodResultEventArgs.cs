@@ -21,6 +21,11 @@ namespace Meteor.DDP
                 this.Message = message;
                 this.ErrorType = errorType;
             }
+
+            public override string ToString()
+            {
+                return String.Format("Error: {0} Reason: {1} ErrorType: {2} Message: {3}", ErrorCode, Reason, ErrorType, Message);
+            }
         }
 
         internal DdpMethodResultEventArgs(String callId, MethodError error)

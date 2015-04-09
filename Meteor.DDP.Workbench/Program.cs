@@ -47,6 +47,8 @@ namespace Meteor.DDP.Workbench
         static void OnMessageResult(object sender, DdpMethodResultEventArgs e)
         {
             Console.WriteLine("Method call result:" + e.CallId);
+            if (e.Error != null)
+                Console.WriteLine("Error: {0}", e.Error);
         }
 
         static void OnError(object sender, DdpMeteorErrorEventArgs e)

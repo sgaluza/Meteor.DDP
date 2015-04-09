@@ -84,12 +84,12 @@ namespace Meteor.DDP
             byte[] buffer = new byte[bufferSize];
             MemoryStream stream = new MemoryStream(bufferSize);
             Int32 start = 0;
+            String msg = "";
 
             try
             {
                 while (this._socket.State == WebSocketState.Open)
                 {
-                    String msg = "";
                     ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
                     WebSocketReceiveResult result = await this._socket.ReceiveAsync(segment, CancellationToken.None);
                     if (!result.EndOfMessage)
@@ -108,6 +108,7 @@ namespace Meteor.DDP
                         else
                         {
                             String msgType = message.msg.ToString();
+
                             switch (msgType)
                             {
                                 case "ping":
@@ -144,8 +145,13 @@ namespace Meteor.DDP
                                     }
                                     break;
                                 default:
-                                    if (this.Message != null)
-                                        this.Message(this, new DdpMessageEventArgs(message.id.ToString(), message.msg.ToString(), message.collection.ToString(), message.fields));
+                                    if (message.id != null && message.msg != null && message.collection != null && message.fields != null)
+                                    {
+                                        if (this.Message != null)
+                                            this.Message(this, new DdpMessageEventArgs(message.id.ToString(), message.msg.ToString(), message.collection.ToString(), message.fields));
+                                    }
+                                    else
+                                        throw new DdpClientException("Unrecognized message: " + message.ToString());
                                     break;
                             }
                         }

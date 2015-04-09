@@ -48,6 +48,7 @@
     <Compile Include="DdpClient.cs" />
     <Compile Include="DdpClientException.cs" />
     <Compile Include="EventArgs\DdpClientErrorEventArgs.cs" />
+    <Compile Include="EventArgs\DdpEventArgs.cs" />
     <Compile Include="EventArgs\DdpMeteorErrorEventArgs.cs" />
     <Compile Include="EventArgs\DdpMessageEventArgs.cs" />
     <Compile Include="EventArgs\DdpMethodResultEventArgs.cs" />
