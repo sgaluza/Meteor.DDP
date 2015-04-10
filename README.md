@@ -44,8 +44,8 @@ void OnMessage(object sender, DdpMessageEventArgs e)
 
 ```
 Meteor.methods({
-    MeteorMethod: function (event){
-      console.log("I'm called from .NET!")
+    MeteorMethod: function (message){
+      console.log("I'm called from .NET! The message: " + message.data);
     }
   });
 ```
@@ -55,7 +55,7 @@ Meteor.methods({
 ```
 client.Publish(callId, "MeteorMethod", new
 {
-    Type = "test",
-    @event = "Hello, Meteor!!!"
+    hello = "hello",
+    data = "Hello, Meteor!!!"
 });
 ```
