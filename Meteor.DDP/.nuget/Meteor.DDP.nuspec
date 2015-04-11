@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Meteor.DDP</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <authors>Sergey Galuza</authors>
     <owners>Sergey Galuza</owners>
     <projectUrl>https://github.com/sgaluza/Meteor.DDP</projectUrl>
