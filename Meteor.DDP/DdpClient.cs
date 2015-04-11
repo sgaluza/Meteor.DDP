@@ -30,12 +30,27 @@ namespace Meteor.DDP
             this._socket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds(100);
         }
 
-        public Task ConnectAsync()
+        public void Connect()
         {
-            return this._socket.ConnectAsync(this._uri, CancellationToken.None)
+            this.ConnectAsync().Wait();
+        }
+
+        public void Publish(String callId, String method, params dynamic[] args)
+        {
+            this.PublishAsync(callId, method, args).Wait();
+        }
+
+        public void Subscribe(String callId, String method, params dynamic[] args)
+        {
+            this.SubscribeAsync(callId, method, args).Wait();
+        }
+
+        public async Task ConnectAsync()
+        {
+            await this._socket.ConnectAsync(this._uri, CancellationToken.None)
                 .ContinueWith(s =>
                 {
-                    this.Send(new
+                    return this.Send(new
                     {
                         msg = "connect",
                         version = "1",
@@ -49,9 +64,9 @@ namespace Meteor.DDP
 
         }
 
-        public void Publish(String callId, String method, params dynamic[] args)
+        public async Task PublishAsync(String callId, String method, params dynamic[] args)
         {
-            this.Send(new
+            await this.Send(new
             {
                 msg = "method",
                 method = method,
@@ -60,9 +75,9 @@ namespace Meteor.DDP
             });
         }
 
-        public void Subscribe(String subId, String method, params dynamic[] args)
+        public async Task SubscribeAsync(String subId, String method, params dynamic[] args)
         {
-            this.Send(new
+            await this.Send(new
                 {
                     msg = "sub",
                     name = method,
@@ -72,10 +87,10 @@ namespace Meteor.DDP
             );
         }
 
-        private void Send(dynamic message)
+        private async Task Send(dynamic message)
         {
             ArraySegment<byte> segment = new ArraySegment<byte>(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
-            this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None).Wait();
+            await this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
         private async Task SubscriberLoop()
@@ -95,7 +110,7 @@ namespace Meteor.DDP
                     {
                         this._socket.Dispose();
                         this._socket = new ClientWebSocket();
-                        ConnectAsync().Wait();
+                        await ConnectAsync();
                             
                     }
                     WebSocketReceiveResult result = await this._socket.ReceiveAsync(segment, CancellationToken.None);
@@ -119,7 +134,7 @@ namespace Meteor.DDP
                             switch (msgType)
                             {
                                 case "ping":
-                                    this.Send(new { msg = "pong" });
+                                    await this.Send(new { msg = "pong" });
                                     break;
                                 case "error":
                                     if (this.MeteorError != null)

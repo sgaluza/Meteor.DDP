@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Meteor.DDP")]
-[assembly: AssemblyDescription("Simple Meteor DDP Connector for .NET. It uses .NET built-in ClientWebsite for communication.")]
+[assembly: AssemblyDescription("Simple Meteor DDP Connector for .NET. It uses .NET built-in ClientWebsocket for communication.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AIS Novations")]
 [assembly: AssemblyProduct("Meteor.DDP")]

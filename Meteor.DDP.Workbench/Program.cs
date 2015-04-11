@@ -20,7 +20,7 @@ namespace Meteor.DDP.Workbench
                 client.ClientError += OnClientError;
 
 
-                client.ConnectAsync().Wait();
+                client.Connect();
                 String callId = Guid.NewGuid().ToString("N");
                 client.Subscribe(Guid.NewGuid().ToString("N"), "MeteorPublished");
                 client.Publish(callId, "MeteorMethod", new
