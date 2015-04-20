@@ -26,8 +26,6 @@ namespace Meteor.DDP
         public DdpClient(String url)
         {
             this._uri = new Uri(String.Format("ws://{0}/websocket", url));
-            this._socket = new ClientWebSocket();
-            this._socket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds(100);
         }
 
         public void Connect()
@@ -47,6 +45,10 @@ namespace Meteor.DDP
 
         public async Task ConnectAsync()
         {
+            if (this._socket != null)
+                this._socket.Dispose();
+            this._socket = new ClientWebSocket();
+            this._socket.Options.KeepAliveInterval = TimeSpan.FromMilliseconds(100);
             await this._socket.ConnectAsync(this._uri, CancellationToken.None)
                 .ContinueWith(s =>
                 {
@@ -106,13 +108,6 @@ namespace Meteor.DDP
                 while (this._socket.State == WebSocketState.Open)
                 {
                     ArraySegment<byte> segment = new ArraySegment<byte>(buffer);
-                    if(this._socket.State == WebSocketState.Aborted)
-                    {
-                        this._socket.Dispose();
-                        this._socket = new ClientWebSocket();
-                        await ConnectAsync();
-                            
-                    }
                     WebSocketReceiveResult result = await this._socket.ReceiveAsync(segment, CancellationToken.None);
                     if (!result.EndOfMessage)
                     {
@@ -124,9 +119,16 @@ namespace Meteor.DDP
                         stream.Write(buffer, start, result.Count);
                         msg = Encoding.UTF8.GetString(stream.ToArray());
                         dynamic message = JsonConvert.DeserializeObject<dynamic>(msg);
+                        
+                        
 
                         if (this._sessionId == null)
                             this._sessionId = message.session;
+                        else if(message == null || message.msg == null)
+                        {
+                            if(message.server_id == null)
+                                throw new DdpClientException(String.Format("Unknown message: {0}", message));
+                        }
                         else
                         {
                             String msgType = message.msg.ToString();
@@ -191,6 +193,7 @@ namespace Meteor.DDP
             }
             finally
             {
+                this._sessionId = null;
                 stream.Dispose();
             }
         }
@@ -198,6 +201,11 @@ namespace Meteor.DDP
         public void Dispose()
         {
             this._socket.Dispose();
+        }
+
+        public WebSocketState WebSocketState
+        {
+            get { return this._socket.State; }
         }
     }
 }
