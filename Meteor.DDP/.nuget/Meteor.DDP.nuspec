@@ -2,17 +2,18 @@
 <package >
   <metadata>
     <id>Meteor.DDP</id>
-    <version>1.0.3</version>
+    <version>1.1.1</version>
     <authors>Sergey Galuza</authors>
     <owners>Sergey Galuza</owners>
     <projectUrl>https://github.com/sgaluza/Meteor.DDP</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Simple Meteor DDP Connector for .NET. It uses .NET built-in ClientWebsocket class for communication.</description>
-    <releaseNotes>Fixed dependency</releaseNotes>
+    <releaseNotes>Sycnhronized send issue fixed. AsyncEx dependency added.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>Metor DDP</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0" />
+      <dependency id="Nito.AsyncEx" version="3.0" />
     </dependencies>
   </metadata>
 </package>

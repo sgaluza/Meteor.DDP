@@ -23,6 +23,8 @@ namespace Meteor.DDP
         private Uri _uri;
         private String _sessionId;
 
+        private Nito.AsyncEx.AsyncLock _sendLock = new Nito.AsyncEx.AsyncLock();
+
         public DdpClient(String url)
         {
             this._uri = new Uri(String.Format("ws://{0}/websocket", url));
@@ -92,7 +94,11 @@ namespace Meteor.DDP
         private async Task Send(dynamic message)
         {
             ArraySegment<byte> segment = new ArraySegment<byte>(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
-            await this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+
+            using(await this._sendLock.LockAsync())
+            {
+                await this._socket.SendAsync(segment, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
 
         private async Task SubscriberLoop()
