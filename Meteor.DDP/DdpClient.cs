@@ -206,7 +206,10 @@ namespace Meteor.DDP
 
         public void Dispose()
         {
-            this._socket.Dispose();
+            if (this._socket != null) 
+            {
+                this._socket.Dispose();
+            }
         }
 
         public WebSocketState WebSocketState
