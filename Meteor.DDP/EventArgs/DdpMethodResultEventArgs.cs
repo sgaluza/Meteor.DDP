@@ -14,6 +14,7 @@ namespace Meteor.DDP
             public String Reason { get; private set; }
             public String Message { get; private set; }
             public String ErrorType { get; private set; }
+            
 
             internal MethodError(Int32 errorCode, String reason, String message, String errorType)
             {
@@ -28,14 +29,16 @@ namespace Meteor.DDP
             }
         }
 
-        internal DdpMethodResultEventArgs(String callId, MethodError error)
+        internal DdpMethodResultEventArgs(String callId, MethodError error, String result)
         {
             this.CallId = callId;
             this.Error = error;
+            this.Result = result;
         }
 
         public String CallId { get; private set; }
         public MethodError Error { get; private set; }
+        public String Result { get; private set;  }
     }
 }
 

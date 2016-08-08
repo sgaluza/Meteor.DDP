@@ -126,8 +126,6 @@ namespace Meteor.DDP
                         msg = Encoding.UTF8.GetString(stream.ToArray());
                         dynamic message = JsonConvert.DeserializeObject<dynamic>(msg);
                         
-                        
-
                         if (this._sessionId == null)
                             this._sessionId = message.session;
                         else if(message == null || message.msg == null)
@@ -171,7 +169,7 @@ namespace Meteor.DDP
                                                 message.error.message.ToString(),
                                                 message.error.errorType.ToString());
                                         }
-                                        this.MethodResult(this, new DdpMethodResultEventArgs(message.id.ToString(), error));
+                                        this.MethodResult(this, new DdpMethodResultEventArgs(message.id.ToString(), error, message.result?.ToString()));
                                     }
                                     break;
                                 default:

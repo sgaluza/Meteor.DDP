@@ -46,7 +46,7 @@ namespace Meteor.DDP.Workbench
 
         static void OnMessageResult(object sender, DdpMethodResultEventArgs e)
         {
-            Console.WriteLine("Method call result:" + e.CallId);
+            Console.WriteLine("Method call result:{0}:  {1}", e.CallId, e.Result);
             if (e.Error != null)
                 Console.WriteLine("Error: {0}", e.Error);
         }
