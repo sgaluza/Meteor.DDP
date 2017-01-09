@@ -1,6 +1,10 @@
 # Meteor.DDP
 
-A simple implementation of Meteor DDP integration with .NET/C#. The only dependency is Newton.Json for quick dynamic-json serialization. The code uses dynamics and C# events. Very simple usage:
+A simple implementation of Meteor DDP integration with .NET/C#.
+
+Runtime needs a platform that provides `System.Net.WebSockets`, in practice, Windows 8 and above.  The only external dependencies are Newton.Json a.k.a. [Json.NET](https://www.nuget.org/packages/Newtonsoft.Json/) for quick dynamic-json serialization and  Nito.AsyncEx a.k.a [Async and Task Helpers ](https://www.nuget.org/packages/Nito.AsyncEx/).
+
+The code uses dynamics and C# events. Very simple usage:
 
 ### NuGet package
 
